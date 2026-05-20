@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 上下游产业链全景</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+  <style>
+    :root {
+      --accent: #00d4ff;
+      --accent-2: #ff6ec7;
+      --accent-3: #7cffb2;
+      --bg-grad: radial-gradient(ellipse at top, #0f2027 0%, #050a12 70%);
+    }
+    .reveal { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; }
+    .reveal .slides { text-align: left; }
+    .reveal section { background: var(--bg-grad); padding: 1.5em 1em; }
+    .reveal h1, .reveal h2, .reveal h3 { color: var(--accent); text-transform: none; letter-spacing: 0.02em; }
+    .reveal h1 { font-size: 2.4em; }
+    .reveal h2 { font-size: 1.6em; border-bottom: 2px solid rgba(0,212,255,0.4); padding-bottom: 0.25em; margin-bottom: 0.6em; }
+    .reveal h3 { font-size: 1.15em; color: var(--accent-3); }
+    .reveal p, .reveal li { color: #e6edf3; font-size: 0.7em; line-height: 1.55; }
+    .reveal ul { list-style: none; padding-left: 0.2em; }
+    .reveal ul li::before { content: "▹ "; color: var(--accent-2); margin-right: 0.3em; }
+    .reveal em { color: var(--accent-3); font-style: normal; }
+    .reveal strong { color: #fff; }
+
+    /* Cover */
+    .cover { text-align: center !important; }
+    .cover h1 {
+      font-size: 3em;
+      background: linear-gradient(120deg, #00d4ff, #ff6ec7 60%, #7cffb2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.2em;
+    }
+    .cover .subtitle { color: #a8b3c7; font-size: 1.1em; }
+    .cover .meta { margin-top: 2em; color: #6b7689; font-size: 0.55em; letter-spacing: 0.2em; }
+
+    /* Three-tier stack */
+    .stack { display: grid; grid-template-columns: 1fr; gap: 0.6em; margin-top: 0.4em; }
+    .tier {
+      border-radius: 14px;
+      padding: 0.9em 1.1em;
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      border-left: 5px solid var(--accent);
+    }
+    .tier.up { border-left-color: #00d4ff; }
+    .tier.mid { border-left-color: #ff6ec7; }
+    .tier.down { border-left-color: #7cffb2; }
+    .tier h3 { margin: 0 0 0.3em 0; }
+    .tier .tag { position: absolute; right: 1em; top: 0.6em; font-size: 0.55em; color: #8a96a7; }
+    .tier p { margin: 0; font-size: 0.62em; color: #c7d1e0; }
+
+    /* Two column */
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; }
+    .cols.tri { grid-template-columns: 1fr 1fr 1fr; }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.9em 1em;
+    }
+    .card h3 { margin-top: 0; }
+    .card ul li { font-size: 0.62em; }
+
+    .pill {
+      display: inline-block;
+      padding: 0.15em 0.6em;
+      border-radius: 999px;
+      font-size: 0.5em;
+      margin-right: 0.3em;
+      background: rgba(0,212,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.3);
+    }
+    .pill.pink { background: rgba(255,110,199,0.12); color: var(--accent-2); border-color: rgba(255,110,199,0.3); }
+    .pill.green { background: rgba(124,255,178,0.12); color: var(--accent-3); border-color: rgba(124,255,178,0.3); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.6em; color: #d8e0ec; }
+    table th, table td { padding: 0.5em 0.6em; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    table th { color: var(--accent); font-weight: 600; }
+    table tr:hover td { background: rgba(0,212,255,0.05); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 0.5em;
+      margin-top: 0.6em;
+    }
+    .flow .node {
+      background: linear-gradient(140deg, rgba(0,212,255,0.15), rgba(255,110,199,0.1));
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 14px;
+      padding: 0.8em;
+      text-align: center;
+    }
+    .flow .node h3 { margin: 0 0 0.4em 0; font-size: 0.95em; }
+    .flow .node p { font-size: 0.55em; margin: 0; color: #c0cad9; }
+    .flow .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-2);
+      font-size: 1.4em;
+    }
+
+    .footer-note {
+      position: absolute;
+      bottom: 0.6em;
+      right: 1em;
+      font-size: 0.45em;
+      color: #5a6577;
+      letter-spacing: 0.15em;
+    }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6em; margin-top: 0.6em; }
+    .kpi {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 0.7em;
+      text-align: center;
+    }
+    .kpi .num {
+      font-size: 1.4em;
+      font-weight: 700;
+      background: linear-gradient(120deg, #00d4ff, #ff6ec7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .kpi .lbl { font-size: 0.5em; color: #9aa6b8; }
+
+    .reveal section.has-light-bg { background: #f4f6fb; }
+    .reveal section.has-light-bg p, .reveal section.has-light-bg li { color: #1d2735; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Cover -->
+      <section class="cover">
+        <h1>AI 上下游产业链全景</h1>
+        <p class="subtitle">从一颗芯片到一个 Agent — 拆解人工智能的价值链</p>
+        <p class="meta">2026 · INDUSTRY OVERVIEW</p>
+        <div class="footer-note">使用 ← / → 翻页 · 按 F 进入全屏 · 按 S 打开演讲者视图</div>
+      </section>
+
+      <!-- Slide 2: Agenda -->
+      <section>
+        <h2>本次分享</h2>
+        <ul>
+          <li><strong>What</strong> — 什么是 AI 产业链？为什么要分层看？</li>
+          <li><strong>上游</strong> — 算力、芯片、数据、能源：AI 的"燃料"</li>
+          <li><strong>中游</strong> — 基础大模型、训练框架、MaaS 平台</li>
+          <li><strong>下游</strong> — 行业应用、Agent、C 端产品</li>
+          <li><strong>趋势与机会</strong> — 谁在赚钱？瓶颈在哪？</li>
+        </ul>
+      </section>
+
+      <!-- Slide 3: Overall map -->
+      <section>
+        <h2>一张图看懂 AI 三层结构</h2>
+        <div class="stack">
+          <div class="tier up">
+            <span class="tag">UPSTREAM · 基础设施</span>
+            <h3>上游 · 算力 + 数据 + 能源</h3>
+            <p>GPU/ASIC 芯片、HBM 存储、光模块、IDC 数据中心、电力、训练数据与标注</p>
+          </div>
+          <div class="tier mid">
+            <span class="tag">MIDSTREAM · 模型与平台</span>
+            <h3>中游 · 模型 + 框架 + 云</h3>
+            <p>基础大模型、开源框架、向量数据库、MaaS / API 平台、微调与对齐工具链</p>
+          </div>
+          <div class="tier down">
+            <span class="tag">DOWNSTREAM · 应用</span>
+            <h3>下游 · 行业 + Agent + 终端</h3>
+            <p>C 端应用、企业级 Copilot、垂直行业方案、AI Agent、具身智能机器人</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Upstream -->
+      <section>
+        <h2>上游 · 算力是 AI 的"石油"</h2>
+        <div class="cols tri">
+          <div class="card">
+            <h3>AI 芯片</h3>
+            <ul>
+              <li>NVIDIA H100/B200</li>
+              <li>AMD MI300X</li>
+              <li>Google TPU v5</li>
+              <li>华为昇腾 910B</li>
+              <li>寒武纪、海光</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>关键元器件</h3>
+            <ul>
+              <li>HBM 高带宽内存（SK 海力士 / 三星 / 美光）</li>
+              <li>先进封装 CoWoS（台积电）</li>
+              <li>光模块 800G（中际旭创 / 新易盛）</li>
+              <li>液冷散热</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>数据 & 能源</h3>
+            <ul>
+              <li>训练语料 / 合成数据</li>
+              <li>数据标注（Scale AI、海天瑞声）</li>
+              <li>IDC 数据中心、绿电</li>
+              <li>云算力租赁（CoreWeave）</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:0.6em;font-size:0.55em;color:#8a96a7;">⚡ 单卡 B200 价格 ≈ 4 万美金，一座 10 万卡集群造价 ≈ 50 亿美金，电力消耗 ≈ 150 MW</p>
+      </section>
+
+      <!-- Slide 5: Midstream -->
+      <section>
+        <h2>中游 · 模型与平台</h2>
+        <div class="cols">
+          <div class="card">
+            <h3><span class="pill pink">基础大模型</span>Foundation Models</h3>
+            <ul>
+              <li><strong>海外</strong>：OpenAI GPT、Anthropic Claude、Google Gemini、Meta Llama、xAI Grok</li>
+              <li><strong>中国</strong>：DeepSeek、通义千问、文心一言、Kimi、豆包、智谱 GLM</li>
+              <li><strong>多模态</strong>：Sora（视频）、Suno（音乐）、Midjourney（图像）</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="pill green">工具链 & 平台</span>Infra Layer</h3>
+            <ul>
+              <li><strong>训练框架</strong>：PyTorch、JAX、Megatron</li>
+              <li><strong>推理 / 部署</strong>：vLLM、TensorRT-LLM</li>
+              <li><strong>向量数据库</strong>：Pinecone、Milvus、Weaviate</li>
+              <li><strong>MaaS</strong>：Hugging Face、AWS Bedrock、阿里百炼、火山方舟</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Downstream -->
+      <section>
+        <h2>下游 · 应用百花齐放</h2>
+        <div class="cols tri">
+          <div class="card">
+            <h3>C 端 · To Consumer</h3>
+            <ul>
+              <li>ChatGPT / Claude.ai</li>
+              <li>豆包 / Kimi / 元宝</li>
+              <li>Midjourney、剪映 AI</li>
+              <li>AI 陪伴：Character.ai、星野</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>B 端 · To Business</h3>
+            <ul>
+              <li>办公：Microsoft Copilot、Notion AI</li>
+              <li>编程：Cursor、Claude Code、GitHub Copilot</li>
+              <li>客服 / 营销：Salesforce Einstein</li>
+              <li>设计：Figma AI、Adobe Firefly</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>行业 · Vertical</h3>
+            <ul>
+              <li>金融：智能投顾、风控</li>
+              <li>医疗：AI 影像、新药研发</li>
+              <li>教育：AI 家教、口语陪练</li>
+              <li>自动驾驶：Tesla FSD、Waymo</li>
+              <li>具身智能：Figure、宇树、优必选</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Value flow -->
+      <section>
+        <h2>价值如何流动？</h2>
+        <div class="flow">
+          <div class="node">
+            <h3>🔧 上游</h3>
+            <p>卖"铲子"<br/>高毛利、高壁垒<br/>NVIDIA 毛利 ≈ 75%</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="node">
+            <h3>🧠 中游</h3>
+            <p>烧钱训练模型<br/>暂时亏损换规模<br/>OpenAI 2025 亏损 ≈ 50 亿美金</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="node">
+            <h3>🚀 下游</h3>
+            <p>场景变现<br/>SaaS / Agent 订阅<br/>毛利分化大</p>
+          </div>
+        </div>
+        <p style="margin-top:1em;font-size:0.6em;color:#a8b3c7;">💡 当前阶段：<em>上游赚走绝大多数利润</em>，中游打价格战，下游 PMF 正在被验证。</p>
+      </section>
+
+      <!-- Slide 8: Key players table -->
+      <section>
+        <h2>各环节关键玩家速览</h2>
+        <table>
+          <thead>
+            <tr><th>层级</th><th>环节</th><th>代表公司（海外 / 中国）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>上游</td><td>AI 芯片</td><td>NVIDIA、AMD、Broadcom / 华为、寒武纪、海光</td></tr>
+            <tr><td>上游</td><td>HBM / 封装</td><td>SK Hynix、Samsung、TSMC / 长鑫、长电科技</td></tr>
+            <tr><td>上游</td><td>光模块</td><td>Coherent、Lumentum / 中际旭创、新易盛</td></tr>
+            <tr><td>上游</td><td>云算力</td><td>AWS、Azure、GCP、CoreWeave / 阿里云、火山引擎</td></tr>
+            <tr><td>中游</td><td>大模型</td><td>OpenAI、Anthropic、Google、Meta / DeepSeek、阿里、字节</td></tr>
+            <tr><td>中游</td><td>开源 / 工具</td><td>Hugging Face、LangChain / 魔搭社区</td></tr>
+            <tr><td>下游</td><td>编程 Agent</td><td>Cursor、Anthropic Claude Code、GitHub / 通义灵码</td></tr>
+            <tr><td>下游</td><td>具身智能</td><td>Figure、Tesla Optimus / 宇树、智元、银河通用</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Slide 9: KPI -->
+      <section>
+        <h2>几个值得记住的数字</h2>
+        <div class="kpi-row">
+          <div class="kpi"><div class="num">$1.3T</div><div class="lbl">2030 全球 AI 市场预计规模</div></div>
+          <div class="kpi"><div class="num">75%</div><div class="lbl">NVIDIA 数据中心业务毛利率</div></div>
+          <div class="kpi"><div class="num">10⁵</div><div class="lbl">单次前沿模型训练 GPU 卡数级别</div></div>
+          <div class="kpi"><div class="num">~10×</div><div class="lbl">推理成本每年下降幅度</div></div>
+        </div>
+        <p style="margin-top:1em;font-size:0.6em;color:#a8b3c7;">⚠️ 数据来自公开研报与厂商披露，仅作量级参考。</p>
+      </section>
+
+      <!-- Slide 10: Trends -->
+      <section>
+        <h2>四个正在发生的趋势</h2>
+        <div class="cols">
+          <div class="card">
+            <h3>① 算力军备竞赛</h3>
+            <ul>
+              <li>万卡集群 → 十万卡集群</li>
+              <li>电力 / 散热 成为新瓶颈</li>
+              <li>"主权 AI"驱动各国自建</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>② 模型趋于平价</h3>
+            <ul>
+              <li>开源追平闭源差距</li>
+              <li>Token 价格 1 年降 90%+</li>
+              <li>"模型是商品，数据是壁垒"</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>③ Agent 元年</h3>
+            <ul>
+              <li>从 Chat 到 Act：会用工具的 AI</li>
+              <li>编程、客服、运营率先落地</li>
+              <li>Computer Use / Browser Use</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>④ 具身智能升温</h3>
+            <ul>
+              <li>人形机器人量产元年</li>
+              <li>世界模型 + 大模型 + 硬件</li>
+              <li>制造、物流、家庭场景</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Bottlenecks -->
+      <section>
+        <h2>瓶颈与风险</h2>
+        <ul>
+          <li><strong>能源</strong>：一座大型 AI 数据中心 ≈ 一座中型城市用电量</li>
+          <li><strong>先进制程</strong>：CoWoS 封装产能 90% 集中在台积电</li>
+          <li><strong>数据枯竭</strong>：高质量公开语料即将"训练完"，依赖合成数据</li>
+          <li><strong>商业化</strong>：模型公司单位经济模型 (Unit Economics) 仍待证明</li>
+          <li><strong>监管</strong>：版权、隐私、安全、出口管制（A100/H100/B200）</li>
+        </ul>
+      </section>
+
+      <!-- Slide 12: Takeaway -->
+      <section class="cover">
+        <h1>一句话总结</h1>
+        <p style="font-size:0.9em;color:#e6edf3;margin-top:1em;">
+          上游<em>卖铲子</em>赚现金流，中游<em>造大脑</em>抢入口，<br/>
+          下游<em>找场景</em>验证 PMF —<br/>
+          <strong>谁能把 Token 成本打下来 + 把场景做深，谁就赢下一轮。</strong>
+        </p>
+        <p class="meta" style="margin-top:3em;">Thanks · Q & A</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      controls: true,
+      progress: true,
+      center: false,
+      plugins: [ RevealNotes, RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
