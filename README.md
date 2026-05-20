@@ -4,12 +4,16 @@
 
 ## 预览方式
 
-直接用浏览器打开 `index.html`，或本地起一个静态服务器：
+所有依赖（reveal.js 5.1.0）都已 vendor 到 `vendor/` 目录，**无需联网即可播放**。
+
+推荐用本地静态服务器打开（部分浏览器在 `file://` 协议下会限制脚本与演讲者视图弹窗）：
 
 ```bash
 python3 -m http.server 8000
 # 访问 http://localhost:8000/
 ```
+
+也可以直接双击 `index.html` 用浏览器打开；如果遇到演讲者视图无法弹出，请改用上面的 http.server 方式。
 
 ## 内容大纲
 
